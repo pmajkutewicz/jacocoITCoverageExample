@@ -8,9 +8,15 @@
     <artifactId>parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
-        <jacoco-maven-plugin.version>0.7.5.201505241946</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
         <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
         <maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
+
+        <!-- The destination file for the code coverage report has to be set to the same value
+         in the parent pom and in each module pom.
+         Then Sonar will use the report containing IT coverage when running Sonar analysis in each source modules.
+         -->
+        <sonar.jacoco.itReportPath>${project.basedir}/../integrations-tests/target/jacoco-it.exec</sonar.jacoco.itReportPath>
     </properties>
     <packaging>pom</packaging>
 
@@ -66,8 +72,6 @@
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <destFile>${project.build.directory}/jacoco.exec</destFile>
                             <!--
                                 Sets the name of the property containing the settings
                                 for JaCoCo runtime agent.
@@ -81,16 +85,10 @@
                     -->
                     <execution>
                         <id>post-unit-test</id>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <dataFile>${project.build.directory}/jacoco.exec</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
-                        </configuration>
                     </execution>
 
                     <!--
@@ -105,8 +103,6 @@
                         </goals>
                         <configuration>
                             <dumpOnExit>true</dumpOnExit>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
                             <!--
                                 Sets the name of the property containing the settings
                                 for JaCoCo runtime agent.
@@ -123,14 +119,8 @@
                         <!-- must be after tomcat shutdown -->
                         <phase>verify</phase>
                         <goals>
-                            <goal>report-integration</goal>
+                            <goal>report-aggregate</goal>
                         </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
