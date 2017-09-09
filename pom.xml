@@ -16,7 +16,7 @@
          in the parent pom and in each module pom.
          Then Sonar will use the report containing IT coverage when running Sonar analysis in each source modules.
          -->
-        <sonar.jacoco.itReportPath>${project.basedir}/../integration-tests/target/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <sonar.jacoco.itReportPath>${project.basedir}/../integrations-tests/target/jacoco-it.exec</sonar.jacoco.itReportPath>
     </properties>
     <packaging>pom</packaging>
 
